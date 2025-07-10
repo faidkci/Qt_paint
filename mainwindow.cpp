@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QImageWriter>
 #include <QImageReader>
+#include <QResizeEvent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     , scene(nullptr)
 {
     ui->setupUi(this);
-
 
     ui->toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
@@ -33,7 +33,6 @@ MainWindow::~MainWindow()
     delete timer;
     delete ui;
 }
-
 
 void MainWindow::slotTimer()
 {
@@ -67,14 +66,7 @@ void MainWindow::on_actionBlue_triggered()
 
 void MainWindow::on_actionClear_triggered()
 {
-    timer->stop();
-    delete scene;
-
-    scene = new paintScene();
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-
-    timer->start(100);
+    scene->clearScene();
 }
 
 void MainWindow::on_actionCustomColor_triggered()
@@ -104,54 +96,35 @@ void MainWindow::on_actionTriangle_triggered()
     scene->setDrawMode(paintScene::ModeFigure);
 }
 
+void MainWindow::on_actionFreehand_triggered()
+{
+    scene->setDrawMode(paintScene::ModeFreehand);
+}
+
 void MainWindow::on_actionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-                                                    "Save Image", "",
-                                                    "PNG Image (*.png);;JPEG Image (*.jpg *.jpeg);;Bitmap Image (*.bmp)");
+                                                    "Save Vector Image", "",
+                                                    "Vector Graphics (*.vec)");
 
     if (fileName.isEmpty()) return;
 
-    QRectF rect = scene->itemsBoundingRect();
-    QPixmap pixmap(rect.size().toSize());
-    pixmap.fill(Qt::transparent);
-
-    QPainter painter(&pixmap);
-    painter.setRenderHint(QPainter::Antialiasing);
-    scene->render(&painter, pixmap.rect(), rect);
-
-    if (!pixmap.save(fileName)) {
-        QMessageBox::warning(this, "Save Error", "Failed to save image file");
+    if (!scene->saveToFile(fileName)) {
+        QMessageBox::warning(this, "Save Error", "Failed to save file");
     }
 }
 
 void MainWindow::on_actionLoad_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    "Load Image", "",
-                                                    "Image Files (*.png *.jpg *.jpeg *.bmp)");
+                                                    "Load Vector Image", "",
+                                                    "Vector Graphics (*.vec)");
 
     if (fileName.isEmpty()) return;
 
-    timer->stop();
-    delete scene;
+    scene->clearScene();
 
-    scene = new paintScene();
-    ui->graphicsView->setScene(scene);
-    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-
-    timer->start(100);
-
-    QPixmap pixmap(fileName);
-    if (pixmap.isNull()) {
-        QMessageBox::warning(this, "Load Error", "Failed to load image file");
-        return;
+    if (!scene->loadFromFile(fileName)) {
+        QMessageBox::warning(this, "Load Error", "Failed to load file");
     }
-
-    QGraphicsPixmapItem* item = scene->addPixmap(pixmap);
-    item->setPos(0, 0);
-
-    scene->setSceneRect(scene->itemsBoundingRect());
 }
-
-

@@ -9,13 +9,12 @@ Square::Square(QPointF point, QObject *parent) :
 
 Square::~Square()
 {
-
 }
-
 
 void Square::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setPen(QPen(WhatCa(), 2));
+    painter->setPen(QPen(penColor(), 2));
+    painter->setBrush(QBrush(penColor()));
 
     QRectF rect(endPoint().x() > startPoint().x() ? startPoint().x() : endPoint().x(),
                 endPoint().y() > startPoint().y() ? startPoint().y() : endPoint().y(),
@@ -27,4 +26,3 @@ void Square::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option)
     Q_UNUSED(widget)
 }
-

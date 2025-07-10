@@ -13,6 +13,8 @@ public:
     explicit Triangle(QPointF point, QObject *parent = 0);
     ~Triangle();
 
+    int type() const override { return Figure::TriangleType; }
+
 private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };

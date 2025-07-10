@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QPainter>
+#include <QFile>
+#include <QDataStream>
 
 #include "paintscene.h"
 
@@ -33,14 +35,14 @@ private slots:
     void on_actionSquare_triggered();
     void on_actionRomb_triggered();
     void on_actionTriangle_triggered();
+    void on_actionFreehand_triggered();
 
 private:
     Ui::MainWindow *ui;
-
     QTimer *timer;
     paintScene *scene;
 
-    void resizeEvent(QResizeEvent * event);
-
+    void resizeEvent(QResizeEvent * event) override;
 };
+
 #endif // MAINWINDOW_H

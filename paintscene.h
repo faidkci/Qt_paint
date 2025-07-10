@@ -5,12 +5,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
 #include <QDebug>
+#include <QVector>
+#include <QDataStream>
 
 #include "figure.h"
 
 class paintScene : public QGraphicsScene
 {
-
     Q_OBJECT
 
 public:
@@ -18,47 +19,52 @@ public:
     ~paintScene();
 
     void setPenColor(const QColor &color);
+    QColor penColor() const { return m_penColor; }
 
     int typeFigure() const;
     void setTypeFigure(const int type);
-    enum FigureTypes
-    {
+
+    enum FigureType {
         SquareType,
         RombType,
-        TriangleType
+        TriangleType,
+        LineType,
+        FreehandType
     };
 
-    enum DrawMode
-    {
+    int type() const  { return Figure::FreehandType; }
+
+    enum DrawMode {
         ModeDraw,
-        ModeFigure
+        ModeFigure,
+        ModeFreehand
     };
 
     void setDrawMode(DrawMode mode);
     DrawMode drawMode() const;
 
-    void clear() {
-        clear();
-        update();
-    }
+    void clearScene();
+
+    bool saveToFile(const QString &filename);
+    bool loadFromFile(const QString &filename);
 
 signals:
-
     void typeFigureChanged();
 
 private:
     QPointF     previousPoint;
-    QColor penColor = Qt::red;
+    QColor m_penColor = Qt::red;
 
-    Figure *tempFigure;
+    Figure *tempFigure = nullptr;
     int m_typeFigure;
     DrawMode m_drawMode = ModeDraw;
 
-private:
+    QVector<Figure*> figures;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+private:
+    void mousePressEvent(QGraphicsSceneMouseEvent * event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // PAINTSCENE_H

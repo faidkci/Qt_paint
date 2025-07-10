@@ -13,6 +13,8 @@ public:
     explicit Square(QPointF point, QObject *parent = 0);
     ~Square();
 
+    int type() const override { return Figure::SquareType; }
+
 private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };

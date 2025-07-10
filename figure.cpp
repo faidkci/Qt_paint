@@ -11,7 +11,6 @@ Figure::Figure(QPointF point, QObject *parent) :
 
 Figure::~Figure()
 {
-
 }
 
 QRectF Figure::boundingRect() const
@@ -47,9 +46,19 @@ void Figure::setPenColor(const QColor &color)
     m_penColor = color;
 }
 
-QColor Figure::WhatCa() const
+QColor Figure::penColor() const
 {
     return m_penColor;
+}
+
+void Figure::save(QDataStream &stream) const
+{
+    stream << m_startPoint << m_endPoint << m_penColor;
+}
+
+void Figure::load(QDataStream &stream)
+{
+    stream >> m_startPoint >> m_endPoint >> m_penColor;
 }
 
 QPointF Figure::startPoint() const

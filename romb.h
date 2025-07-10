@@ -13,6 +13,8 @@ public:
     explicit Romb(QPointF point, QObject *parent = 0);
     ~Romb();
 
+    int type() const override { return Figure::RombType; }
+
 private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };

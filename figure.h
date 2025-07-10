@@ -15,9 +15,21 @@ class Figure : public QObject, public QGraphicsItem
                    READ endPoint WRITE setEndPoint
                        NOTIFY pointChanged)
 public:
-    explicit Figure(QPointF point, QObject *parent = 0);
-    ~Figure();
+    enum FigureType {
+        SquareType,
+        RombType,
+        TriangleType,
+        LineType,
+        FreehandType
+    };
 
+    explicit Figure(QPointF point, QObject *parent = 0);
+    virtual ~Figure();
+
+
+    virtual int type() const = 0;
+    virtual void save(QDataStream &stream) const;
+    virtual void load(QDataStream &stream);
     QPointF startPoint() const;
     QPointF endPoint() const;
 
@@ -25,18 +37,17 @@ public:
     void setEndPoint(const QPointF point);
 
     void setPenColor(const QColor &color);
+    QColor penColor() const;
 
-    QColor WhatCa() const;
+    virtual QRectF boundingRect() const override;
 
 signals:
     void pointChanged();
 
-private:
+protected:
     QPointF m_startPoint;
     QPointF m_endPoint;
     QColor m_penColor = Qt::black;
-
-    QRectF boundingRect() const;
 
 public slots:
     void updateRomb();

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Vector Graphics Editor</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -46,6 +46,7 @@
    <addaction name="actionSquare"/>
    <addaction name="actionRomb"/>
    <addaction name="actionTriangle"/>
+   <addaction name="actionFreehand"/>
    <addaction name="actionSave"/>
    <addaction name="actionLoad"/>
   </widget>
@@ -88,6 +89,11 @@
   <action name="actionTriangle">
    <property name="text">
     <string>Triangle</string>
+   </property>
+  </action>
+  <action name="actionFreehand">
+   <property name="text">
+    <string>Freehand</string>
    </property>
   </action>
   <action name="actionSave">
